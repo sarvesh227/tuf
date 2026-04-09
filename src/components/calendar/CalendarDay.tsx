@@ -67,18 +67,18 @@ function CalendarDay({
   return (
     <div
       className="flex items-center justify-center relative"
-      style={{ height: "32px" }}
+      style={{ height: "44px" }}
     >
       <div
         className="absolute w-full"
-        style={{ height: "28px", top: "2px", ...stripStyle }}
+        style={{ height: "36px", top: "4px", ...stripStyle }}
       />
       <button
         onClick={onClick}
         disabled={!isCurrentMonth}
         className="flex items-center justify-center rounded-full transition-all duration-150 select-none relative z-10"
         style={{
-          width: "28px", height: "28px", fontSize: "0.72rem",
+          width: "36px", height: "36px", fontSize: "0.8rem",
           fontWeight: isEndpoint || isToday ? 700 : isCurrentMonth ? 500 : 400,
           color: textColor,
           cursor: isCurrentMonth ? "pointer" : "default",

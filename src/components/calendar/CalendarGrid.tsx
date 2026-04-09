@@ -69,7 +69,7 @@ export default function CalendarGrid({
   );
 
   return (
-    <div className="p-3 pt-4 pr-4 pb-4 pl-3">
+    <div className="p-4 pt-5 pr-5 pb-5 pl-4">
       {/* Weekday header */}
       <div className="grid grid-cols-7 mb-1">
         {WEEKDAYS.map((day, i) => (

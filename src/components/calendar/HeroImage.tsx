@@ -29,7 +29,7 @@ export { monthImages };
 
 export default function HeroImage({ year, month, themeColor }: HeroImageProps) {
   return (
-    <div className="relative w-full overflow-hidden" style={{ height: "240px" }}>
+    <div className="relative w-full overflow-hidden" style={{ height: "320px" }}>
       {/* Hero photograph */}
       <img
         src={monthImages[month]}
@@ -41,7 +41,7 @@ export default function HeroImage({ year, month, themeColor }: HeroImageProps) {
       {/* Geometric overlay SVG — same as reference */}
       <svg
         className="absolute bottom-0 left-0 w-full z-10 overflow-visible"
-        style={{ height: "100px" }}
+        style={{ height: "120px" }}
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
       >
@@ -58,7 +58,7 @@ export default function HeroImage({ year, month, themeColor }: HeroImageProps) {
       {/* Month + Year label on the right blue triangle */}
       <div
         className="absolute right-4 text-right z-20"
-        style={{ bottom: "50px" }}
+        style={{ bottom: "65px" }}
       >
         <span
           className="block font-light tracking-widest"

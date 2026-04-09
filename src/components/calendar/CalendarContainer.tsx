@@ -206,7 +206,7 @@ export default function CalendarContainer() {
               <HeroImage year={currentYear} month={currentMonth} themeColor={themeColor} imageSrc="" />
 
               <div className="flex flex-col sm:flex-row">
-                <div className="order-2 sm:order-1 sm:w-[38%] min-h-[220px]">
+                <div className="order-2 sm:order-1 sm:w-[38%] min-h-[320px]">
                   <NotesSection
                     notes={notes}
                     onChange={handleNotesChange}
