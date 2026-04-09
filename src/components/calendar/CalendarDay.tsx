@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import DayNotePopup, { clampPopupPosition } from "./DayNotePopup";
-import { holidays } from "../../lib/utils";
+import { holidays } from "../../lib/calendarUtils";
 
 interface CalendarDayProps {
   date: Date;
