@@ -147,6 +147,7 @@ export default memo(CalendarDay, (prev, next) =>
   prev.isStart === next.isStart &&
   prev.isEnd === next.isEnd &&
   prev.isInRange === next.isInRange &&
+  prev.hasEnd === next.hasEnd &&
   prev.isToday === next.isToday &&
   prev.hasNote === next.hasNote &&
   prev.themeColor === next.themeColor &&

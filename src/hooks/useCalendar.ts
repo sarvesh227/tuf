@@ -251,10 +251,9 @@ export function useCalendar() {
   const toggleDarkMode = useCallback(() => setIsDarkMode(d => !d), []);
   const handleModeChange = useCallback((mode: SelectionMode) => {
     setSelectionMode(mode);
-    if (mode === "single" && range.end) {
-      setRange(prev => ({ start: prev.start, end: null }));
-    }
-  }, [range.end]);
+    // Always reset the selection fully when switching modes
+    setRange({ start: null, end: null });
+  }, []);
 
   return {
     today, currentYear, currentMonth, direction,
