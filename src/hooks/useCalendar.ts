@@ -25,6 +25,7 @@ export function useCalendar() {
   const [notes, setNotes] = useState("");
   const [dayNotes, setDayNotes] = useState<DayNotes>({});
   const [markedDates, setMarkedDates] = useState<Set<string>>(new Set());
+  const [rangeNote, setRangeNote] = useState("");
 
   // ── Marked dates (red dots) ────────────────────────────────────────────────
   const updateMarkedDates = useCallback(() => {
@@ -51,6 +52,24 @@ export function useCalendar() {
           }
         } catch { /* ignore */ }
       }
+      // Range notes (have their date range in the key)
+      if (key && key.startsWith("cal-range-note-")) {
+        // key format: cal-range-note-YYYY-MM-DD_YYYY-MM-DD
+        const datePart = key.replace("cal-range-note-", "");
+        const [startStr, endStr] = datePart.split("_");
+        if (startStr && endStr) {
+          try {
+            const cursor = new Date(startStr);
+            const endDay = new Date(endStr);
+            while (cursor <= endDay) {
+              newMarked.add(dayKey(cursor));
+              cursor.setDate(cursor.getDate() + 1);
+            }
+          } catch { /* ignore */ }
+        } else if (startStr) {
+          newMarked.add(startStr);
+        }
+      }
     }
     setMarkedDates(newMarked);
   }, []);
@@ -75,6 +94,18 @@ export function useCalendar() {
     updateMarkedDates();
   }, [currentYear, currentMonth, updateMarkedDates]);
 
+  // Load the saved note for the current selection whenever range changes
+  useEffect(() => {
+    if (!range.start) {
+      setRangeNote("");
+      return;
+    }
+    const start = dayKey(range.start);
+    const end = range.end ? dayKey(range.end) : start;
+    const stored = localStorage.getItem(`cal-range-note-${start}_${end}`) ?? "";
+    setRangeNote(stored);
+  }, [range]);
+
   // ── Handlers ─────────────────────────────────────────────────────────────────
 
   const handleNotesChange = useCallback(
@@ -84,6 +115,18 @@ export function useCalendar() {
     },
     [currentYear, currentMonth]
   );
+
+  const handleRangeNoteChange = useCallback((val: string) => setRangeNote(val), []);
+
+  /** Save the note for the current selection and mark all dates with a red dot. */
+  const saveCurrentRangeNote = useCallback(() => {
+    if (!range.start) return;
+    const start = dayKey(range.start);
+    const end = range.end ? dayKey(range.end) : start;
+    const key = `cal-range-note-${start}_${end}`;
+    localStorage.setItem(key, rangeNote);
+    updateMarkedDates();
+  }, [range, rangeNote, updateMarkedDates]);
 
   /** Mark all dates in the current range with a red dot & persist notes text. */
   const saveRangeMarkers = useCallback(
@@ -180,7 +223,8 @@ export function useCalendar() {
       if (key && (
         key.startsWith("cal-notes-") ||
         key.startsWith("cal-day-notes-") ||
-        key.startsWith("cal-range-markers-")
+        key.startsWith("cal-range-markers-") ||
+        key.startsWith("cal-range-note-")
       )) {
         keysToRemove.push(key);
       }
@@ -188,6 +232,7 @@ export function useCalendar() {
     keysToRemove.forEach(k => localStorage.removeItem(k));
     setNotes("");
     setDayNotes({});
+    setRangeNote("");
     setMarkedDates(new Set());
   }, []);
 
@@ -242,8 +287,9 @@ export function useCalendar() {
   return {
     today, currentYear, currentMonth, direction,
     range, notes, dayNotes, markedDates,
-    selectionMode,
+    rangeNote, selectionMode,
     handleDayClick, handleNotesChange, addNoteForDay, deleteDayNote,
+    handleRangeNoteChange, saveCurrentRangeNote,
     saveRangeMarkers, clearAllNotes, goToPrevMonth, goToNextMonth,
     handleModeChange,
   } as const;

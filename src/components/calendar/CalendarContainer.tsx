@@ -141,8 +141,9 @@ const EraserIcon = () => (
 export default function CalendarContainer() {
   const {
     today, currentYear, currentMonth, direction, range, notes, dayNotes,
-    markedDates, selectionMode,
+    markedDates, rangeNote, selectionMode,
     handleDayClick, handleNotesChange, addNoteForDay, deleteDayNote,
+    handleRangeNoteChange, saveCurrentRangeNote,
     saveRangeMarkers, clearAllNotes, goToPrevMonth, goToNextMonth, handleModeChange,
   } = useCalendar();
 
@@ -211,6 +212,10 @@ export default function CalendarContainer() {
                     onChange={handleNotesChange}
                     onSave={() => saveRangeMarkers(range, notes)}
                     themeColor={themeColor}
+                    range={range}
+                    rangeNote={rangeNote}
+                    onRangeNoteChange={handleRangeNoteChange}
+                    onSaveRangeNote={saveCurrentRangeNote}
                   />
                 </div>
                 <div className="order-1 sm:order-2 sm:w-[62%]">
