@@ -89,7 +89,7 @@ export default function CalendarGrid({
           const state = cellStates[idx];
           const k = dayKey(date);
           const notesForDay = isCurrentMonth ? (dayNotes[k] ?? []) : [];
-          const hasNote = isCurrentMonth && notesForDay.length > 0;
+          const hasNote = isCurrentMonth && (notesForDay.length > 0 || markedDates.has(k));
 
           return (
             <CalendarDay
