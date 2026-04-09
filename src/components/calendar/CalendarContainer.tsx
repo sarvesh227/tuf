@@ -60,10 +60,10 @@ const SpiralBinding = React.memo(function SpiralBinding() {
         >
           <defs>
             <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#1e2024" />
-              <stop offset="25%" stopColor="#555a64" />
-              <stop offset="50%" stopColor="#7a808f" />
-              <stop offset="75%" stopColor="#3c3f48" />
+              <stop offset="0%"   stopColor="#1e2024" />
+              <stop offset="25%"  stopColor="#555a64" />
+              <stop offset="50%"  stopColor="#7a808f" />
+              <stop offset="75%"  stopColor="#3c3f48" />
               <stop offset="100%" stopColor="#141518" />
             </linearGradient>
             <filter id="wire-shadow" x="-40%" y="-40%" width="180%" height="180%">
@@ -77,11 +77,8 @@ const SpiralBinding = React.memo(function SpiralBinding() {
           {/* Horizontal wire + hanger hook */}
           <path
             d="M 65,9 L 238,9 C 246,9 249,-2 255,-2 C 261,-2 264,9 272,9 L 445,9"
-            fill="none"
-            stroke="url(#metal)"
-            strokeWidth="2.4"
-            filter="url(#wire-shadow-h)"
-            strokeLinecap="round"
+            fill="none" stroke="url(#metal)" strokeWidth="2.4"
+            filter="url(#wire-shadow-h)" strokeLinecap="round"
           />
           <rect x="253.5" y="-3.5" width="3" height="5" rx="1.5" fill="#141518" filter="url(#wire-shadow-h)" />
 
@@ -133,71 +130,42 @@ function ModeToggle({ mode, themeColor, onMode }: ModeToggleProps) {
   );
 }
 
-// ── Icon helpers (no lucide dependency) ───────────────────────────────────────
-const SunIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
-    <circle cx="12" cy="12" r="5" />
-    <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-    <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-  </svg>
-);
-const MoonIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-  </svg>
-);
+// ── Eraser icon ───────────────────────────────────────────────────────────────
 const EraserIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
     <path d="M20 20H7L3 16l11-11 7 7-1 8z" /><line x1="6" y1="14" x2="14" y2="14" />
   </svg>
 );
 
-// ── CalendarContainer (main export) ──────────────────────────────────────────
+// ── CalendarContainer ─────────────────────────────────────────────────────────
 export default function CalendarContainer() {
   const {
     today, currentYear, currentMonth, direction, range, notes, dayNotes,
-    markedDates, selectionMode, isDarkMode,
+    markedDates, selectionMode,
     handleDayClick, handleNotesChange, addNoteForDay, deleteDayNote,
-    saveRangeMarkers, clearAllNotes, goToPrevMonth, goToNextMonth, toggleDarkMode, handleModeChange,
+    saveRangeMarkers, clearAllNotes, goToPrevMonth, goToNextMonth, handleModeChange,
   } = useCalendar();
 
   const themeColor = MONTH_THEME_COLORS[currentMonth];
 
   return (
     <div
-      className="flex flex-col min-h-screen transition-colors duration-300"
-      style={{
-        background: isDarkMode
-          ? "radial-gradient(circle at 85% 15%, #1e293b 0%, #0f172a 100%)"
-          : "radial-gradient(circle at 85% 15%, #ffffff 0%, #f0f1f5 40%, #e2e4e9 100%)",
-      }}
+      className="flex flex-col min-h-screen"
+      style={{ background: "radial-gradient(circle at 85% 15%, #ffffff 0%, #f0f1f5 40%, #e2e4e9 100%)" }}
     >
       {/* ── Top toolbar ── */}
       <div className="flex items-center justify-between px-4 py-3 max-w-[720px] w-full mx-auto mt-2">
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-extrabold tracking-tight" style={{ color: themeColor }}>
-            🗓 Wall Calendar
-          </span>
-        </div>
+        <span className="text-lg font-extrabold tracking-tight" style={{ color: themeColor }}>
+          🗓 Wall Calendar
+        </span>
         <div className="flex items-center gap-2">
           <ModeToggle mode={selectionMode} themeColor={themeColor} onMode={handleModeChange} />
           <button
-            onClick={() => {
-              if (window.confirm("Clear ALL saved notes?")) clearAllNotes();
-            }}
+            onClick={() => { if (window.confirm("Clear ALL saved notes?")) clearAllNotes(); }}
             className="p-2 rounded-full border border-red-200 text-red-500 hover:bg-red-50 transition-all"
             title="Clear all notes"
           >
             <EraserIcon />
-          </button>
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-full border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
-            title="Toggle dark mode"
-          >
-            {isDarkMode ? <SunIcon /> : <MoonIcon />}
           </button>
         </div>
       </div>
@@ -205,24 +173,18 @@ export default function CalendarContainer() {
       {/* ── Calendar card ── */}
       <div className="flex-1 flex items-start justify-center px-2 pb-8">
         <div
-          className="w-full bg-white dark:bg-gray-900 relative mt-8"
+          className="w-full bg-white relative mt-8"
           style={{
             maxWidth: "720px",
             borderRadius: "6px",
             perspective: "1200px",
             border: "1px solid #d4d8e0",
-            boxShadow: isDarkMode
-              ? "-8px 16px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(99,102,241,0.2)"
-              : "-16px 20px 32px rgba(0,0,0,0.15), -4px 6px 12px rgba(0,0,0,0.08)",
+            boxShadow: "-16px 20px 32px rgba(0,0,0,0.15), -4px 6px 12px rgba(0,0,0,0.08)",
           }}
         >
-          {/* Spiral binding at top */}
           <SpiralBinding />
-
-          {/* Navigation arrows */}
           <CalendarNavigation onPrev={goToPrevMonth} onNext={goToNextMonth} />
 
-          {/* Animated month page */}
           <AnimatePresence mode="popLayout" custom={direction} initial={false}>
             <motion.div
               key={`${currentYear}-${currentMonth}`}
@@ -235,20 +197,13 @@ export default function CalendarContainer() {
                 transformOrigin: "top center",
                 backfaceVisibility: "hidden",
                 width: "100%",
-                backgroundColor: isDarkMode ? "#111827" : "white",
+                backgroundColor: "white",
                 borderRadius: "6px",
                 overflow: "hidden",
               }}
             >
-              {/* Hero image */}
-              <HeroImage
-                year={currentYear}
-                month={currentMonth}
-                themeColor={themeColor}
-                imageSrc=""
-              />
+              <HeroImage year={currentYear} month={currentMonth} themeColor={themeColor} imageSrc="" />
 
-              {/* Body: Notes (left) + Grid (right) */}
               <div className="flex flex-col sm:flex-row">
                 <div className="order-2 sm:order-1 sm:w-[38%] min-h-[220px]">
                   <NotesSection
@@ -274,9 +229,8 @@ export default function CalendarContainer() {
                 </div>
               </div>
 
-              {/* Tip footer */}
               <div
-                className="text-center py-2 text-gray-400 dark:text-gray-600"
+                className="text-center py-2 text-gray-400"
                 style={{ fontSize: "0.62rem", borderTop: "1px solid #f3f4f6" }}
               >
                 Right-click any date to add a note · Red dot = saved note

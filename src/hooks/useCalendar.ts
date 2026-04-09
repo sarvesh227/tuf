@@ -25,21 +25,6 @@ export function useCalendar() {
   const [notes, setNotes] = useState("");
   const [dayNotes, setDayNotes] = useState<DayNotes>({});
   const [markedDates, setMarkedDates] = useState<Set<string>>(new Set());
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.matchMedia("(prefers-color-scheme: dark)").matches;
-    }
-    return false;
-  });
-
-  // ── Dark Mode ───────────────────────────────────────────────────────────────
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDarkMode]);
 
   // ── Marked dates (red dots) ────────────────────────────────────────────────
   const updateMarkedDates = useCallback(() => {
@@ -258,10 +243,10 @@ export function useCalendar() {
   return {
     today, currentYear, currentMonth, direction,
     range, notes, dayNotes, markedDates,
-    selectionMode, isDarkMode,
+    selectionMode,
     handleDayClick, handleNotesChange, addNoteForDay, deleteDayNote,
     saveRangeMarkers, clearAllNotes, goToPrevMonth, goToNextMonth,
-    toggleDarkMode, handleModeChange,
+    handleModeChange,
   } as const;
 }
 
