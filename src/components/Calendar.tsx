@@ -175,15 +175,15 @@ export function Calendar({ selection, setSelection, selectionMode = 'range' }: C
 
       {/* @ts-ignore */}
       <HTMLFlipBook
-        width={450}
-        height={750}
+        width={400}
+        height={650}
         size="stretch"
         minWidth={315}
-        maxWidth={800}
+        maxWidth={500}
         minHeight={600}
-        maxHeight={1536}
+        maxHeight={1000}
         maxShadowOpacity={0.5}
-        showCover={true}
+        showCover={false}
         mobileScrollSupport={true}
         usePortrait={true}
         useMouseEvents={isMobileScreen}
