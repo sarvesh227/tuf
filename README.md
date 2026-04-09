@@ -2,7 +2,7 @@
 
 A simple wall calendar built with **React + Vite + TypeScript + Tailwind CSS + Framer Motion**.
 
-🔗 **Repo:** https://github.com/sarvesh227/tuf
+🔗 Open **https://tuf-mauve-nu.vercel.app/**
 
 ## Features
 - Single date & date range selection
@@ -27,4 +27,4 @@ npm install
 npm run dev
 ```
 
-Open **http://localhost:5173**
+
