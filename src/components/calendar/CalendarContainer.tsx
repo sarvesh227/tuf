@@ -175,7 +175,7 @@ export default function CalendarContainer() {
       }}
     >
       {/* ── Top toolbar ── */}
-      <div className="flex items-center justify-between px-4 py-3 max-w-[580px] w-full mx-auto mt-2">
+      <div className="flex items-center justify-between px-4 py-3 max-w-[720px] w-full mx-auto mt-2">
         <div className="flex items-center gap-2">
           <span className="text-lg font-extrabold tracking-tight" style={{ color: themeColor }}>
             🗓 Wall Calendar
@@ -207,7 +207,7 @@ export default function CalendarContainer() {
         <div
           className="w-full bg-white dark:bg-gray-900 relative mt-8"
           style={{
-            maxWidth: "560px",
+            maxWidth: "720px",
             borderRadius: "6px",
             perspective: "1200px",
             border: "1px solid #d4d8e0",
