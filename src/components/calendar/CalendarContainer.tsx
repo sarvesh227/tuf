@@ -160,7 +160,7 @@ export default function CalendarContainer() {
     today, currentYear, currentMonth, direction, range, notes, dayNotes,
     markedDates, selectionMode, isDarkMode,
     handleDayClick, handleNotesChange, addNoteForDay, deleteDayNote,
-    clearAllNotes, goToPrevMonth, goToNextMonth, toggleDarkMode, handleModeChange,
+    saveRangeMarkers, clearAllNotes, goToPrevMonth, goToNextMonth, toggleDarkMode, handleModeChange,
   } = useCalendar();
 
   const themeColor = MONTH_THEME_COLORS[currentMonth];
@@ -254,6 +254,7 @@ export default function CalendarContainer() {
                   <NotesSection
                     notes={notes}
                     onChange={handleNotesChange}
+                    onSave={() => saveRangeMarkers(range, notes)}
                     themeColor={themeColor}
                   />
                 </div>

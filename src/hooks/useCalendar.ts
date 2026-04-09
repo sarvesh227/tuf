@@ -46,12 +46,23 @@ export function useCalendar() {
     const newMarked = new Set<string>();
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
+      // Per-day notes (right-click)
       if (key && key.startsWith("cal-day-notes-")) {
         try {
           const raw = localStorage.getItem(key);
           if (raw) {
             const parsed = JSON.parse(raw) as DayNotes;
             Object.keys(parsed).forEach(k => newMarked.add(k));
+          }
+        } catch { /* ignore */ }
+      }
+      // Range markers (saved from notes panel)
+      if (key && key.startsWith("cal-range-markers-")) {
+        try {
+          const raw = localStorage.getItem(key);
+          if (raw) {
+            const parsed = JSON.parse(raw) as string[];
+            parsed.forEach(k => newMarked.add(k));
           }
         } catch { /* ignore */ }
       }
@@ -87,6 +98,53 @@ export function useCalendar() {
       localStorage.setItem(`cal-notes-${currentYear}-${currentMonth}`, val);
     },
     [currentYear, currentMonth]
+  );
+
+  /** Mark all dates in the current range with a red dot & persist notes text. */
+  const saveRangeMarkers = useCallback(
+    (selectedRange: SelectedRange, notesText: string) => {
+      // Always persist the notes text
+      localStorage.setItem(`cal-notes-${currentYear}-${currentMonth}`, notesText);
+
+      if (!selectedRange.start) return;
+
+      // Build list of dates to mark
+      const datesToMark: string[] = [];
+      const start = selectedRange.start;
+      const end = selectedRange.end ?? selectedRange.start;
+
+      // Iterate from start to end (inclusive)
+      const cursor = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+      const endDay = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+      while (cursor <= endDay) {
+        datesToMark.push(dayKey(cursor));
+        cursor.setDate(cursor.getDate() + 1);
+      }
+
+      // Merge into existing range markers for this month and any spanned months
+      // Group by year-month
+      const byMonth: Record<string, string[]> = {};
+      datesToMark.forEach(k => {
+        const [y, m] = k.split("-");
+        const monthKey = `${y}-${parseInt(m) - 1}`;
+        if (!byMonth[monthKey]) byMonth[monthKey] = [];
+        byMonth[monthKey].push(k);
+      });
+
+      Object.entries(byMonth).forEach(([monthKey, keys]) => {
+        const storageKey = `cal-range-markers-${monthKey}`;
+        let existing: string[] = [];
+        try {
+          const raw = localStorage.getItem(storageKey);
+          if (raw) existing = JSON.parse(raw) as string[];
+        } catch { /* ignore */ }
+        const merged = Array.from(new Set([...existing, ...keys]));
+        localStorage.setItem(storageKey, JSON.stringify(merged));
+      });
+
+      updateMarkedDates();
+    },
+    [currentYear, currentMonth, updateMarkedDates]
   );
 
   const addNoteForDay = useCallback(
@@ -134,7 +192,11 @@ export function useCalendar() {
     const keysToRemove: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key && (key.startsWith("cal-notes-") || key.startsWith("cal-day-notes-"))) {
+      if (key && (
+        key.startsWith("cal-notes-") ||
+        key.startsWith("cal-day-notes-") ||
+        key.startsWith("cal-range-markers-")
+      )) {
         keysToRemove.push(key);
       }
     }
@@ -199,7 +261,7 @@ export function useCalendar() {
     range, notes, dayNotes, markedDates,
     selectionMode, isDarkMode,
     handleDayClick, handleNotesChange, addNoteForDay, deleteDayNote,
-    clearAllNotes, goToPrevMonth, goToNextMonth,
+    saveRangeMarkers, clearAllNotes, goToPrevMonth, goToNextMonth,
     toggleDarkMode, handleModeChange,
   } as const;
 }
