@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { dayKey } from "../lib/calendarUtils";
+import { dayKey, holidays } from "../lib/calendarUtils";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -102,8 +102,26 @@ export function useCalendar() {
     }
     const start = dayKey(range.start);
     const end = range.end ? dayKey(range.end) : start;
-    const stored = localStorage.getItem(`cal-range-note-${start}_${end}`) ?? "";
-    setRangeNote(stored);
+    const stored = localStorage.getItem(`cal-range-note-${start}_${end}`);
+
+    if (stored !== null) {
+      // User already has a note saved — always show it
+      setRangeNote(stored);
+      return;
+    }
+
+    // No saved note yet — auto-fill if a single holiday date is selected
+    if (!range.end || start === end) {
+      const mm = start.slice(5, 7); // "MM"
+      const dd = start.slice(8, 10); // "DD"
+      const holiday = holidays[`${mm}-${dd}`];
+      if (holiday) {
+        setRangeNote(`${holiday.emoji} ${holiday.name}\n\nHappy ${holiday.name}! 🎉`);
+        return;
+      }
+    }
+
+    setRangeNote("");
   }, [range]);
 
   // ── Handlers ─────────────────────────────────────────────────────────────────
