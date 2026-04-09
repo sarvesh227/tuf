@@ -8,7 +8,7 @@ import NotesSection from "./NotesSection";
 import CalendarNavigation from "./CalendarNavigation";
 
 // ── Month theme colors ────────────────────────────────────────────────────────
-export const MONTH_THEME_COLORS = [
+const MONTH_THEME_COLORS = [
   "#1D94D5", // Jan — Blue
   "#E83E8C", // Feb — Pink
   "#28A745", // Mar — Green
